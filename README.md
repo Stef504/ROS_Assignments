@@ -13,3 +13,6 @@ For the exam of research track I, the modified files were on the following folde
 - `assignment2_rt_py`
 - `assignment_1_rt2`
 
+
+For the Experimental Robotics, the folders included will be what is expected in the src folder. However, the link will be on the outside so the log/build ect will be there but we should exclude them and just have the folders inside the src.
+
