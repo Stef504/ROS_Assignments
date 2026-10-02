@@ -4,6 +4,9 @@
     <!-- Properties -->
     <xacro:property name="length_wheel" value="0.05" />
     <xacro:property name="radius_wheel" value="0.1" />
+    <xacro:property name="length_prism" value="0.03" />
+    <xacro:property name="width_prism" value="0.03" />
+    <xacro:property name="height_prism" value="0.6" />
 
     <!-- Macros -->
     <xacro:macro name="default_inertial" params="mass">
@@ -17,12 +20,30 @@
         </inertial>
     </xacro:macro>
 
+    <xacro:macro name="default_interial_box" params="mass">
+        <inertial>
+            <mass value="${mass}" />
+            <origin rpy="0 0 0" xyz="0 0 0.3"/>
+            <inertia
+                ixx="${mass*(length_prism**2+width_prism**2)/12}" ixy="0" ixz="0"
+                iyy="${mass*(length_prism**2+height_prism**2)/12}" iyz="0"
+                izz="${mass*(length_prism**2+width_prism**2)/12}"/>
+        </inertial>
+    </xacro:macro>
+
     <xacro:macro name="wheel_geometry">
         <geometry>
             <cylinder length="${length_wheel}" radius="${radius_wheel}"/>
         </geometry>
     </xacro:macro>
 
+    <xacro:macro name="prism_geometry">
+        <geometry>
+            <box size="${length_prism} ${width_prism} ${height_prism}"/>
+        </geometry>
+    </xacro:macro>
+
+    <!-- Colors -->
     <material name="blue">
         <color rgba="0.203125 0.23828125 0.28515625 1.0"/>
     </material>
@@ -127,6 +148,34 @@
         </visual>
     </link>
 
+    <!-- link 1 -->
+    <link name="link_1">
+        <xacro:default_interial_box mass="2.0"/>
+        <collision>
+            <origin xyz="0 0 0.3" rpy="0 0 0"/>
+            <xacro:prism_geometry/>
+        </collision>
+        <visual name="link_visual">
+            <origin xyz="0 0 0.3" rpy="0 0 0"/>
+            <xacro:prism_geometry/>
+            <material name="orange"/>
+        </visual>
+    </link>
+
+    <!-- link 2 -->
+    <link name="link_2">
+        <xacro:default_interial_box mass="2.0"/>
+        <collision>
+            <origin xyz="0 0 0.3" rpy="0 0 0"/>
+            <xacro:prism_geometry/>
+        </collision>
+        <visual name="link_visual">
+            <origin xyz="0 0 0.3" rpy="0 0 0"/>
+            <xacro:prism_geometry/>
+            <material name="orange"/>
+        </visual>
+    </link>
+
     <!-- Joints Right Wheel -->
     <joint type="continuous"
         name="right_wheel_joint">
@@ -150,7 +199,7 @@
     </joint>
 
 
-    <!-- Base -->
+    <!-- Joint Base -->
     <joint type="continuous"
         name="base_joint">
         <origin xyz="0 0 0.08" rpy="0 0 0"/>
@@ -160,4 +209,28 @@
         <limit effort="100" velocity="10"/>
         <dynamics damping="1.0" friction="1.0"/>
     </joint>
+
+     <!-- Joint Link 1 -->
+    <joint type="revolute"
+        name="link_1_joint">
+        <origin xyz="0 0 0.045" rpy="0 0 0"/>
+        <child link="link_1"/>
+        <parent link="base"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-0.785" upper="0.785" effort="100" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0"/>
+    </joint>
+
+     <!-- Joint Link 2 -->
+    <joint type="revolute"
+        name="link_2_joint">
+        <origin xyz="0.03 0 0.5" rpy="0 0 0"/>
+        <child link="link_2"/>
+        <parent link="link_1"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-0.785" upper="0.785" effort="100" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0"/>
+    </joint>
+
+
 </robot>
