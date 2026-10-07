@@ -13,3 +13,4 @@ For the exam of research track I, the modified files were on the following folde
 - `assignment2_rt_py`
 - `assignment_1_rt2`
 
+`To inspect the tracking of each asssignment and the overall work please refer to the following Git repository: https://github.com/Stef504/Research-Track-1.git. It is not as well organized but the overall work and effect taken to produce and understand each assignment can be viewed. 
