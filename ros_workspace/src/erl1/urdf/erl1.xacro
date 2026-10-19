@@ -1,6 +1,10 @@
 <?xml version='1.0'?>
 <robot name="erl1" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <!-- Load physical properties -->
+    <xacro:include filename="$(find erl1)/urdf/erl1.gazebo" />
+
+
     <!-- Properties -->
     <xacro:property name="length_wheel" value="0.05" />
     <xacro:property name="radius_wheel" value="0.1" />
