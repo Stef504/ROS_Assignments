@@ -29,7 +29,7 @@
             <mass value="${mass}" />
             <origin rpy="0 0 0" xyz="0 0 0.3"/>
             <inertia
-                ixx="${mass*(length_prism**2+width_prism**2)/12}" ixy="0" ixz="0"
+                ixx="${mass*(width_prism**2+height_prism**2)/12}" ixy="0" ixz="0"
                 iyy="${mass*(length_prism**2+height_prism**2)/12}" iyz="0"
                 izz="${mass*(length_prism**2+width_prism**2)/12}"/>
         </inertial>
@@ -105,10 +105,9 @@
     <link name="left_wheel">
         <xacro:default_inertial mass="5.0"/>
         <collision>
-            <origin xyz="0 0 0" rpy="0 0.1570 1.5707"/>
+            <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
             <xacro:wheel_geometry/>
         </collision>
-
         <visual name="left_wheel_visual">
             <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
             <xacro:wheel_geometry/>
@@ -166,7 +165,7 @@
         </visual>
     </link>
 
-    <!-- link 2 -->
+    <!-- Link 2 -->
     <link name="link_2">
         <xacro:default_interial_box mass="2.0"/>
         <collision>
@@ -178,6 +177,34 @@
             <xacro:prism_geometry/>
             <material name="orange"/>
         </visual>
+    </link>
+
+    <!-- Camera -->
+    <link name="camera_link">
+        <visual name="camera_link">
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.1 0.1 0.1"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.1 0.1 0.1"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.3"/>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <inertia
+                ixx="0.0005" ixy="0" ixz="0"
+                iyy="0.0005" iyz="0"
+                izz="0.0005"/>
+            </inertial>
+    </link>
+
+    <link name="camera_link_optical">
     </link>
 
     <!-- Joints Right Wheel -->
@@ -236,5 +263,21 @@
         <dynamics damping="1.0" friction="1.0"/>
     </joint>
 
+    <!-- Joint Camera-->
+    <joint name="camera_joint" type="revolute">
+        <parent link="link_chassis"/>
+        <child link="camera_link"/>
+        <origin xyz="0 0 0.035" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1.57" upper="1.57" effort="5"
+        velocity="1.0"/>
+    </joint>
+
+    <joint type="fixed"
+        name="camera_optical_joint">
+        <origin xyz="0 0 0" rpy="-1.5707 0 -1.5707"/>
+        <child link="camera_link_optical"/>
+        <parent link="camera_link"/>
+    </joint>
 
 </robot>
