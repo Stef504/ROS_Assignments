@@ -1,5 +1,5 @@
 <?xml version="1.0"?> 
-<robot>
+<robot> 
     <gazebo>
         <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
             <topic>/cmd_vel</topic>
@@ -7,8 +7,7 @@
             <right_joint>right_wheel_joint</right_joint>
             <wheel_separation>0.3</wheel_separation>
             <wheel_radius>0.1</wheel_radius>
-            <odom_topic>odom</odom_topic>
-            <tf_topic>tf</tf_topic>
+            <odom_topic>/odom</odom_topic>
             <frame_id>odom</frame_id>
             <child_frame_id>link_chassis</child_frame_id>
             <odom_publish_frequency>30</odom_publish_frequency>
@@ -18,7 +17,6 @@
             <topic>joint_states</topic>
             
             <joint_name>camera_joint</joint_name>
-            <joint_name>camera_optical_joint</joint_name>
             <joint_name>left_wheel_joint</joint_name>
             <joint_name>right_wheel_joint</joint_name>
             <joint_name>base_joint</joint_name>
@@ -37,6 +35,15 @@
             <i_gain>0.1</i_gain>
             <d_gain>0.5</d_gain>
         </plugin>
+
+
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+            <render_engine>ogre</render_engine>
+        </plugin>
+
+        <plugin name="gz::sim::systems::Imu" filename="gz-sim-imu-system"/>
+
+
     </gazebo>
 
     <!-- Friction Parameters -->
@@ -66,34 +73,37 @@
 
     <!--Camera-->
     <gazebo reference="camera_link">
-        <sensor name="camera" type="camera">
+        <sensor name="wideangle_camera" type="wideanglecamera">
             <camera>
-                    <horizontal_fov>1.3962634</horizontal_fov>
-                    <image>
+                <horizontal_fov>3.14</horizontal_fov>
+                <image>
                     <width>640</width>
                     <height>480</height>
-                    <format>R8G8B8</format>
                 </image>
                 <clip>
                     <near>0.1</near>
                     <far>15</far>
                 </clip>
-                <noise>
-                    <type>gaussian</type>
-                    <!-- Noise is sampled independently per pixel on each frame.
-                    That pixel's noise value is added to each of its color
-                    channels, which at that point lie in the range [0,1]. -->
-                    <mean>0.0</mean>
-                    <stddev>0.007</stddev>
-                </noise>
-                    <optical_frame_id>camera_link_optical</optical_frame_id>
-                    <camera_info_topic>camera/camera_info</camera_info_topic>
+                <optical_frame_id>camera_link_optical</optical_frame_id>
+                <camera_info_topic>/camera/camera_info</camera_info_topic>
             </camera>
             <always_on>1</always_on>
             <update_rate>20</update_rate>
-            <visualize>true</visualize>
-            <topic>camera/image</topic>
+            <topic>/camera/image</topic>
+            <gz_frame_id>camera_link</gz_frame_id>
         </sensor>
     </gazebo>
+
+    <gazebo reference="imu_link">
+        <sensor name="imu" type="imu">
+            <always_on>1</always_on>
+            <update_rate>50</update_rate>
+            <visualize>true</visualize>
+            <topic>imu</topic>
+            <enable_metrics>true</enable_metrics>
+            <gz_frame_id>imu_link</gz_frame_id>
+        </sensor>
+    </gazebo>
+
 
 </robot>  

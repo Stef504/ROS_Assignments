@@ -72,8 +72,10 @@ def generate_launch_description():
             "/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
             "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
-            "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
-            "/camera_joint/cmd_pos@std_msgs/msg/Float64]gz.msgs.Double",],
+            #"/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+            "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            "/camera_joint/cmd_pos@std_msgs/msg/Float64]gz.msgs.Double",
+            "/imu@sensor_msgs/msg/Imu[gz.msgs.IMU",],
                 output="screen",
                 parameters=[{'use_sim_time': True}]
     )
@@ -83,17 +85,29 @@ def generate_launch_description():
     gz_image_bridge_node = Node(
         package="ros_gz_image",
         executable="image_bridge",
-        arguments=["/camera/image",],
-        output="screen",
-        parameters=[
-            {'use_sim_time': True,
-            'camera.image.compressed.jpeg_quality': 75},
+        arguments=["/camera/image"],
+        remappings=[
+            ("/camera/image/camera_info", "/camera/camera_info")
         ],
+        output="screen",
+        parameters=[{
+            'use_sim_time': True,
+            'camera.image.compressed.jpeg_quality': 75
+        }]
+    )
+  
+
+    ekf_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[os.path.join(pkg_erl1, 'config', 'ekf.yaml'),{'use_sim_time': True},]
+
     )
 
-  
     return LaunchDescription([
         rviz_launch_arg, world_arg, model_arg,
         world_launch, rviz_node, robot_state_publisher_node,
-        spawn_urdf_node, gz_bridge_node, gz_image_bridge_node
+        spawn_urdf_node, gz_bridge_node, gz_image_bridge_node,ekf_node
     ])
