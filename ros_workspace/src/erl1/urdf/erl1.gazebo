@@ -15,7 +15,27 @@
         </plugin>
 
         <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
-            <topic>/joint_states</topic>
+            <topic>joint_states</topic>
+            
+            <joint_name>camera_joint</joint_name>
+            <joint_name>camera_optical_joint</joint_name>
+            <joint_name>left_wheel_joint</joint_name>
+            <joint_name>right_wheel_joint</joint_name>
+            <joint_name>base_joint</joint_name>
+            <joint_name>link_1_joint</joint_name>
+            <joint_name>link_2_joint</joint_name>
+
+        </plugin>
+
+        <plugin
+                filename="gz-sim-joint-position-controller-system"
+                name="gz::sim::systems::JointPositionController">        
+            <joint_name>camera_joint</joint_name>
+            <topic>/camera_joint/cmd_pos</topic>
+
+            <p_gain>5</p_gain>
+            <i_gain>0.1</i_gain>
+            <d_gain>0.5</d_gain>
         </plugin>
     </gazebo>
 

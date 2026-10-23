@@ -72,14 +72,28 @@ def generate_launch_description():
             "/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
             "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             "/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model",
-            "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",],
+            "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
+            "/camera_joint/cmd_pos@std_msgs/msg/Float64]gz.msgs.Double",],
                 output="screen",
                 parameters=[{'use_sim_time': True}]
+    )
+
+    # Bridge for camera image topic
+    # To compress the image in the background. Because sending it via the topic takes almost 20 MB/s network bandwidth.
+    gz_image_bridge_node = Node(
+        package="ros_gz_image",
+        executable="image_bridge",
+        arguments=["/camera/image",],
+        output="screen",
+        parameters=[
+            {'use_sim_time': True,
+            'camera.image.compressed.jpeg_quality': 75},
+        ],
     )
 
   
     return LaunchDescription([
         rviz_launch_arg, world_arg, model_arg,
         world_launch, rviz_node, robot_state_publisher_node,
-        spawn_urdf_node, gz_bridge_node
+        spawn_urdf_node, gz_bridge_node, gz_image_bridge_node
     ])
