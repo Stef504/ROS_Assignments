@@ -10,6 +10,8 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
 
+    
+
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
 
     pkg_erl1 = get_package_share_directory('erl1')
@@ -17,9 +19,11 @@ def generate_launch_description():
     
     gz_path = os.environ.get("GZ_SIM_RESOURCE_PATH", "")
     os.environ["GZ_SIM_RESOURCE_PATH"] = gz_path + os.pathsep + gazebo_models_path
-
+    
+    world_file_path = os.path.join(pkg_erl1, 'worlds', 'sensors_world.sdf')
+    
     rviz_launch_arg = DeclareLaunchArgument('rviz', default_value='true', description='Open RViz.')
-    world_arg = DeclareLaunchArgument('world', default_value='empty.sdf', description='Name of Gazebo world')
+    world_arg = DeclareLaunchArgument('world', default_value=['-r ', world_file_path], description='Gazebo world file with run flag')
     model_arg = DeclareLaunchArgument('model', default_value='erl1.xacro', description='URDF description')
 
     urdf_file_path = PathJoinSubstitution([pkg_erl1, "urdf", LaunchConfiguration('model')])
@@ -75,7 +79,10 @@ def generate_launch_description():
             #"/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
             "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
             "/camera_joint/cmd_pos@std_msgs/msg/Float64]gz.msgs.Double",
-            "/imu@sensor_msgs/msg/Imu[gz.msgs.IMU",],
+            "/imu@sensor_msgs/msg/Imu[gz.msgs.IMU",
+            "/navsat@sensor_msgs/msg/NavSatFix[gz.msgs.NavSat",
+            "/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",],
                 output="screen",
                 parameters=[{'use_sim_time': True}]
     )
