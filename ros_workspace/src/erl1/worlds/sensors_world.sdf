@@ -48,5 +48,42 @@
         </visual>
       </link>
     </model>
+
+  <!-- Cardboard Box Obstacle -->
+    <model name="cardboard_box">
+      <pose>2.0 0.0 0.5 0 0 0</pose> <!-- Placed 2 meters in front of the robot -->
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>1 1 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1 1 1</size></box></geometry>
+          <material>
+            <ambient>0.6 0.4 0.2 1</ambient>
+            <diffuse>0.6 0.4 0.2 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Green Trash Can (Cylinder) -->
+    <model name="trash_can">
+      <pose>3.0 2.0 0.5 0 0 0</pose>
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.3</radius><length>1.0</length></cylinder></geometry>
+          <material>
+            <ambient>0.0 0.8 0.0 1</ambient>
+            <diffuse>0.0 0.8 0.0 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
   </world>
 </sdf>
