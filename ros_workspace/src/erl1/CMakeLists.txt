@@ -10,7 +10,17 @@ find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(image_transport REQUIRED)
 
+add_executable(image_subscriber src/image_subscriber.cpp)
+ament_target_dependencies(image_subscriber rclcpp sensor_msgs cv_bridge OpenCV image_transport)
+
+install(TARGETS image_subscriber
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(DIRECTORY
   launch
