@@ -51,7 +51,7 @@
 
   <!-- Cardboard Box Obstacle -->
     <model name="cardboard_box">
-      <pose>2.0 0.0 0.5 0 0 0</pose> <!-- Placed 2 meters in front of the robot -->
+      <pose>0.0 -2.0 0.5 0 0 0</pose> <!-- Placed 2 meters in front of the robot -->
       <static>true</static>
       <link name="link">
         <collision name="collision">
@@ -84,6 +84,11 @@
         </visual>
       </link>
     </model>
+
+  <include>
+    <uri>model://aruco_box</uri>
+    <pose>2.0 0.0 0.5 0 0 0</pose>
+  </include>
 
   </world>
 </sdf>
