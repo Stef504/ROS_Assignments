@@ -50,7 +50,6 @@ class RobotController(Node):
         self.pose = 0.0
         self.orientation = 0.0
         self.k_matrix = None
-        self.frame_id: str = "camera_color_optical_frame"
         self.notify = param('test_mode')  
         self.marker_size = param('marker_size')
 
@@ -70,7 +69,7 @@ class RobotController(Node):
 
         self.subscription = self.create_subscription(ArucoDetection, param('aruco_topic'), self.aruco_callback, 10)
         self.subscription_intrinsic = self.create_subscription(CameraInfo, param('camera_info_topic'),self.intrinsic_callback, 10)
-        self.subscription_marker_ingo = self.create_subscription(Bool, param('target_reached_topic'),self.target_reached_callback, 10)
+        self.subscription_marker_info = self.create_subscription(Bool, param('target_reached_topic'),self.target_reached_callback, 10)
         self.subscription_image = self.create_subscription(Image, param('image_topic'),self.image_callback, 10)
 
         self.publisher_marker = self.create_publisher(Image, param('marker_image_topic'), 10)
@@ -87,8 +86,8 @@ class RobotController(Node):
         # If no marker detected (notified from a Boolean topic)
         # No marker info
         # No intrinsic matrix received
-        if (self.notify == False) or (len(self.marker_info.markers) == 0) or self.k_matrix is None:
-            self.raduis = 0.0
+        if (len(self.marker_info.markers) == 0) or self.k_matrix is None:
+            self.radius = 0.0
             self.x_px = 0.0
             self.y_px = 0.0
             self.z_depth = 0.0
@@ -117,7 +116,7 @@ class RobotController(Node):
         self.custom_msg.id = int(self.marker_id)
         self.custom_msg.cx = int(self.x_px)
         self.custom_msg.cy = int(self.y_px)
-        self.custom_msg.d = int(self.z_depth)
+        self.custom_msg.d = float(self.z_depth)
 
         self.publisher_msg.publish(self.custom_msg)
         self.get_logger().info(f'Published custom message')
